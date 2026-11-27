@@ -49,24 +49,26 @@ jobs:
           name: java-login-app
           path: .
     
-      - name: copy jar to ec2
+      - name: Upload JAR to EC2
         uses: appleboy/scp-action@v0.1.7
-        with:  
+        with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "app.jar"
-          target: "/opt/java-login-app"
+          source: "target/*.jar" 
+          target: "/home/ubuntu/myapp"
+          strip_components: 1 
 
-      - name: Start Java App on EC2
-        uses: appleboy/ssh-action@v1.2.0
+  
+      - name: Deploy and Restart App on EC2
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo systemctl restart java-login-app
-            systemctl is-active --quiet java-login-app
-
+            cd /home/ubuntu/myapp
+            pkill -f 'java -jar' || true
+            nohup java -jar *.jar > app.log 2>&1 &
 
  
