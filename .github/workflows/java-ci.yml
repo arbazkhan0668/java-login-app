@@ -10,7 +10,7 @@ jobs:
   checkout-code-test:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: checkout codes
         uses: actions/checkout@v6
 
       - name: run maven test & unit test
@@ -32,6 +32,9 @@ jobs:
       - name: packages jar
         run: mvn clean package -DskipTests
 
+      - name: prepare deployment jar
+        run: cp target/*.jar target/app.jar
+
       - name: upload artifact
         uses: actions/upload-artifact@v6
         with:
@@ -39,6 +42,7 @@ jobs:
           path: target/app.jar
   deploy:
     needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps: 
       - name: download artifact
@@ -53,8 +57,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "*.jar"
-          target: "/home/ubuntu/myapp"
+          source: "app.jar"
+          target: "/opt/java-login-app"
 
       - name: Start Java App on EC2
         uses: appleboy/ssh-action@v1.2.0
