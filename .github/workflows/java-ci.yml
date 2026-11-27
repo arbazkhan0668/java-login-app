@@ -43,7 +43,7 @@ jobs:
         with:
           name: java-login-app
           path: target/*.jar
-          if-no-files-found: error # Agar jar nahi bani toh yahin error dikha dega
+          if-no-files-found: error 
 
   deploy:
     needs: build
@@ -84,3 +84,4 @@ jobs:
             cd /home/ubuntu/myapp
             pkill -f 'java -jar' || true
             nohup java -jar *.jar > app.log 2>&1 &
+ 
