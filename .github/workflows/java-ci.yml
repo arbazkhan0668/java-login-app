@@ -3,8 +3,6 @@ name: Java Login App CI
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   checkout-code-test:
@@ -71,3 +69,4 @@ jobs:
             systemctl is-active --quiet java-login-app
 
 
+ 
