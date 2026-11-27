@@ -84,6 +84,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/myapp
-            pkill -f 'java -jar' || true
-            nohup java -jar *.jar > app.log 2>&1 &
+            pkill -f '[j]ava -jar' || true
+            sleep 2
+            nohup java -jar *.jar > app.log 2>&1 & < /dev/null &
+
  
