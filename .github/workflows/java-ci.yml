@@ -38,14 +38,13 @@ jobs:
       - name: Package JAR
         run: mvn clean package -DskipTests
 
-      - name: Verify JAR exists
-        run: test -f target/java-login-app-1.0.0.jar
+     
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: java-login-app
-          path: ./target/java-login-app-1.0.0.jar
+          path: target/*.jar
           if-no-files-found: error 
 
   deploy:
